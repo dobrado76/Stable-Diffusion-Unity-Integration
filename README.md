@@ -77,7 +77,7 @@ Thanks to [UnityCoder](https://github.com/unitycoder/NormalMapFromTexture) for a
 
 
 # Licence
-This repository is under Lesser General Public License (LGPL) v2.1 (LGPL), that you can find in the `License` file.
+This repository is under Lesser General Public License (LGPL) v2.1, that you can find in the `LICENSE` file.
 
 Mainly, it allows you to:
 - use, modify, and distribute this code base and other copyrighted work.
