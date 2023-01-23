@@ -45,9 +45,12 @@ At this point, the project Hierarchy should be looking something like this:
 5. Select the StableDiffusionConfiguration component and make sure the selected setting point to the correct URL and Port (default: http://127.0.0.1:7860/).
 6. Click on the `List Model` button to get the list of all available models from your local Stable Diffusion server.
 ![](SDListModels.png)
-7. Select any existing GameObject with a MeshRenderer (or that contains at least one child with a MeshRenderer) or an Image (or RawImage) and click Generate from the StableDiffusionMaterial or StableDiffusionImage component to generate a new image using the specified parameters.
+7. Select any existing GameObject with a MeshRenderer (or that contains at least one child with a MeshRenderer) or an Image (or RawImage) and click Generate from the StableDiffusionMaterial or StableDiffusionImage component to generate a new image using the specified parameters. 
 ![](SDMaterial.png)
 8. If any error occured, it should be catched by a try/catch and the exception displayed in the Unity Console.
+
+- The StableDiffusionMaterial component requires to be added to a GameObject that has a MeshRenderer (if apply recursively is not used) or have at least one children GameObject (if apply recursively is used). 
+- The StableDiffusionImage component requires to be added to a UI GameObject (in a Canvas hierachy) that has an Image or RawImage component.
 
 
 # Limitations
