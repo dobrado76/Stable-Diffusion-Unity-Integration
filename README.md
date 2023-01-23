@@ -80,6 +80,7 @@ Thanks to [UnityCoder](https://github.com/unitycoder/NormalMapFromTexture) for a
 This repository is under Lesser General Public License (LGPL) v2.1, that you can find in the `LICENSE` file (https://github.com/dobrado76/Stable-Diffusion-Unity-Integration/blob/72560920786b909e829b567567699f332256ea19/LICENSE).
 
 Mainly, it allows you to:
+- use or distribute any artwork generated using this tool without the need to mention this tool, repo or author.
 - use, modify, and distribute this code base and other copyrighted work.
 - create derivative works to be distributed under a different license than the original.
 - requires that the source code for the derative work be made available to others.
