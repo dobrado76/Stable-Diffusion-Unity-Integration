@@ -83,8 +83,7 @@ Mainly, it allows you to:
 - use, modify, and distribute this code base and other copyrighted work.
 - create derivative works to be distributed under a different license than the original.
 - requires that the source code for the derative work be made available to others.
-
-The only restriction is that you are required to include a notice stating that the work is based on this original LGPL-licensed code.
+- requires that any partial, full or modified distribution mention the original source (this repo/author).
 
 # Change Log
 2023-01-23: Initial public distribution version 1.0.0 with brief documentation.
