@@ -19,6 +19,9 @@ using UnityEditor.SceneManagement;
 [ExecuteAlways]
 public class StableDiffusionImage : MonoBehaviour
 {
+    [ReadOnly]
+    public string guid = "";
+    
     public string prompt;
     public string negativePrompt;
 
@@ -43,7 +46,6 @@ public class StableDiffusionImage : MonoBehaviour
 
     public long generatedSeed = -1;
 
-    string guid = "";
     string filename = "";
 
     static private StableDiffusionConfiguration sdc = null;
@@ -67,6 +69,7 @@ public class StableDiffusionImage : MonoBehaviour
     /// </summary>
     void Awake()
     {
+#if UNITY_EDITOR
         if (width < 0 || height < 0)
         {
             StableDiffusionConfiguration sdc = GameObject.FindObjectOfType<StableDiffusionConfiguration>();
@@ -91,11 +94,13 @@ public class StableDiffusionImage : MonoBehaviour
             cfgScale = 7;
             seed = -1;
         }
+#endif
     }
 
 
     void Update()
     {
+#if UNITY_EDITOR
         // Clamp image dimensions values between 128 and 2048 pixels
         if (width < 128) width = 128;
         if (height < 128) height = 128;
@@ -105,6 +110,7 @@ public class StableDiffusionImage : MonoBehaviour
         // If not setup already, generate a GUID (Global Unique Identifier)
         if (guid == "")
             guid = Guid.NewGuid().ToString();
+#endif
     }
 
     // Internally keep tracking if we are currently generating (prevent re-entry)

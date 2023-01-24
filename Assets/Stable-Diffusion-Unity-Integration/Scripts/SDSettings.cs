@@ -132,3 +132,13 @@ class SDResponse
     public string info;
 }
 
+
+/// <summary>
+/// Data structure to help serialize into a JSON the model to be used by Stable Diffusion.
+/// This is to send along a Set Option API request to the server.
+/// </summary>
+class SDOption
+{
+    public string sd_model_checkpoint = "";
+}
+
