@@ -82,10 +82,11 @@ Mainly, it allows you to:
 - use or distribute any artwork generated using this tool without the need to mention this tool, repo or author.
 - use, modify, and distribute this code base and other copyrighted work.
 - create derivative works to be distributed under a different license than the original.
-- requires that the source code for the derative work be made available to others.
-- requires that any partial, full or modified distribution mention the original source (this repo/author).
+Requires that the source code for the derative work be made available to others.
+Requires that any partial, full or modified distribution mention the original source (this repo/author).
 
 
 # Change Log
 2023-01-24: v1.1.0 - Added handling of the samplers as generation parameter. Manual list in StableDiffusionConfiguration that can be culled to remove samplers that you don't use.
+
 2023-01-23: v1.0.0 - Initial public distribution version 1.0.0 with brief documentation.
