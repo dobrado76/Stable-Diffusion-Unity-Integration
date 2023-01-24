@@ -17,6 +17,9 @@ using UnityEditor.SceneManagement;
 [ExecuteAlways]
 public class StableDiffusionMaterial : MonoBehaviour
 {
+    [ReadOnly]
+    public string guid = "";
+    
     public string prompt;
     public string negativePrompt;
 
@@ -56,8 +59,6 @@ public class StableDiffusionMaterial : MonoBehaviour
     [Range(0, 10)]
     public float normalMapStrength = 0.5f;
 
-
-    string guid = "";
     string filename = "";
 
     static private StableDiffusionConfiguration sdc = null;
@@ -87,6 +88,7 @@ public class StableDiffusionMaterial : MonoBehaviour
     /// </summary>
     void Awake()
     {
+#if UNITY_EDITOR
         if (width < 0 || height < 0)
         {
             StableDiffusionConfiguration sdc = GameObject.FindObjectOfType<StableDiffusionConfiguration>();
@@ -111,6 +113,7 @@ public class StableDiffusionMaterial : MonoBehaviour
             cfgScale = 7;
             seed = -1;
         }
+#endif
     }
 
     /// <summary>
@@ -147,6 +150,7 @@ public class StableDiffusionMaterial : MonoBehaviour
     /// </summary>
     void Update()
     {
+#if UNITY_EDITOR
         // Clamp image dimensions values between 128 and 2048 pixels
         if (width < 128) width = 128;
         if (height < 128) height = 128;
@@ -179,6 +183,7 @@ public class StableDiffusionMaterial : MonoBehaviour
             _metallic = metallic;
             _smoothness = smoothness;
         }
+#endif
     }
 
 
@@ -426,14 +431,17 @@ public class StableDiffusionMaterial : MonoBehaviour
 
             // Force the assets and scene to refresh with new material
 #if UNITY_EDITOR
-            EditorUtility.SetDirty(generatedTexture);
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
-            SceneView.RepaintAll();
-            SceneView.FrameLastActiveSceneView();
-            //SceneView.FocusWindowIfItsOpen(typeof(SceneView));
-            EditorApplication.QueuePlayerLoopUpdate();
-            EditorSceneManager.MarkAllScenesDirty();
-            EditorUtility.RequestScriptReload();
+            if (!Application.isPlaying)
+            {
+                EditorUtility.SetDirty(generatedTexture);
+                AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+                SceneView.RepaintAll();
+                SceneView.FrameLastActiveSceneView();
+                //SceneView.FocusWindowIfItsOpen(typeof(SceneView));
+                EditorApplication.QueuePlayerLoopUpdate();
+                EditorSceneManager.MarkAllScenesDirty();
+                EditorUtility.RequestScriptReload();
+            }
 #endif
         }
         catch (Exception e)

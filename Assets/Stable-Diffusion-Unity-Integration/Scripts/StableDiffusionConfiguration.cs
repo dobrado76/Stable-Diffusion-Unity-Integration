@@ -37,17 +37,6 @@ public class StableDiffusionConfiguration : MonoBehaviour
         public string config;
     }
 
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     /// <summary>
     /// Method called when the user click on List Model from the inspector.
     /// </summary>
@@ -91,14 +80,6 @@ public class StableDiffusionConfiguration : MonoBehaviour
         }
 
         yield return null;
-    }
-
-    /// <summary>
-    /// Data structure to help serialize into a JSON the a model to be used by Stable Diffusion.
-    /// </summary>
-    class SDOption
-    {
-        public string sd_model_checkpoint = "";
     }
 
     /// <summary>
