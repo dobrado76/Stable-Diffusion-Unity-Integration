@@ -14,8 +14,11 @@ public class StableDiffusionMaterialEditor : Editor
 
         StableDiffusionMaterial myComponent = (StableDiffusionMaterial)target;
 
-        // Draw the drop-down list
-        myComponent.selectedModel = EditorGUILayout.Popup("Model List", myComponent.selectedModel, myComponent.modelList);
+        // Draw the drop-down list for the Samplers list
+        myComponent.selectedSampler = EditorGUILayout.Popup("Sampler", myComponent.selectedSampler, myComponent.samplersList);
+
+        // Draw the drop-down list for the Models list
+        myComponent.selectedModel = EditorGUILayout.Popup("Model", myComponent.selectedModel, myComponent.modelsList);
         
         // Apply the changes to the serialized object
         serializedObject.ApplyModifiedProperties();

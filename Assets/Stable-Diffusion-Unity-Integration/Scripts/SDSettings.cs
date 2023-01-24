@@ -15,6 +15,7 @@ public class SDSettings : ScriptableObject
     public string OptionAPI = "/sdapi/v1/options";
     public string OutputFolder = "/streamingAssets";
 
+    public string sampler = "Euler a";
     public int width = 512;
     public int height = 512;
     public int steps = 35;

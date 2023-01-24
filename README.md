@@ -1,4 +1,4 @@
-# Stable Diffusion Unity Integration v1.0.0
+# Stable Diffusion Unity Integration v1.1.0
 A Unity Editor Component for image generation using Stable Diffusion Automatic 1111 [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) from within the Unity Editor.
 ![](screenshot.png)
 
@@ -20,7 +20,7 @@ Straightforward Text-to-Image generation for UI elements:
   b) UI component having a Image or RawImage component (Canvas, Panel, Image, Button, etc.)
 - Editor only components for scene/level design (no runtime dependencies to Stable Diffusion)
 - Image generation using any Stable Diffusion models available in the server model folder
-- Standard parameters control over image generation (Prompt and Negative Prompt, Nb. of Steps, CFG Scale, Image dimension and Seed)
+- Standard parameters control over image generation (Prompt and Negative Prompt, Sampler, Nb. of Steps, CFG Scale, Image dimension and Seed)
 - All images saved in the Assets folder for persistent storage and reference
 
 
@@ -37,7 +37,7 @@ Please refer to the SD WebUI repo: https://github.com/AUTOMATIC1111/stable-diffu
 
 Or;
 
-3. Create and open a new Unity project for Built-in Pipeline, download and import the stable-diffusion-unity-integration.unitypackage file into the project (https://github.com/AUTOMATIC1111/stable-diffusion-webui/stable-diffusion-unity-integration.unitypackage)). By starting from a new project and importing the package, none of the demo pre-generated images will be available in the Asset folder but the project should work as-is, since the textures and images are embedded in the Unity project.
+3. Create and open a new Unity project for Built-in Pipeline, download and import the stable-diffusion-unity-integration.unitypackage file into the project (https://github.com/AUTOMATIC1111/stable-diffusion-webui/stable-diffusion-unity-integration.unitypackage). By starting from a new project and importing the package, none of the demo pre-generated images will be available in the Asset folder but the project should work as-is, since the textures and images are embedded in the Unity project.
 
 4. Open the Demo Scene provided in the package found in `StableDiffusionIntegration/Scenes/DemoScene.unity`. There is a version with Post-Processing (you need to install the Post-Processing package, you will need to re-open the scene after installing the package) and a version without Post-Processing.
 
@@ -85,5 +85,7 @@ Mainly, it allows you to:
 - requires that the source code for the derative work be made available to others.
 - requires that any partial, full or modified distribution mention the original source (this repo/author).
 
+
 # Change Log
-2023-01-23: Initial public distribution version 1.0.0 with brief documentation.
+2023-01-24: v1.1.0 - Added handling of the samplers as generation parameter. Manual list in StableDiffusionConfiguration that can be culled to remove samplers that you don't use.
+2023-01-23: v1.0.0 - Initial public distribution version 1.0.0 with brief documentation.

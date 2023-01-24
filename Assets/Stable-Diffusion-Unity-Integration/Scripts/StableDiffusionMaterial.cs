@@ -20,6 +20,20 @@ public class StableDiffusionMaterial : MonoBehaviour
     public string prompt;
     public string negativePrompt;
 
+
+    [SerializeField]
+    public string[] samplersList
+    {
+        get
+        {
+            if (sdc == null)
+                sdc = GameObject.FindObjectOfType<StableDiffusionConfiguration>();
+            return sdc.samplers;
+        }
+    }
+    [HideInInspector]
+    public int selectedSampler = 0;
+
     public int width = -1;
     public int height = -1;
     public int steps = 0;
@@ -52,7 +66,7 @@ public class StableDiffusionMaterial : MonoBehaviour
 
 
     [SerializeField]
-    public string[] modelList
+    public string[] modelsList
     {
         get
         {
@@ -226,7 +240,7 @@ public class StableDiffusionMaterial : MonoBehaviour
         SetupFolders();
 
         // Set the model parameters
-        yield return sdc.SetModelAsync(modelList[selectedModel]);
+        yield return sdc.SetModelAsync(modelsList[selectedModel]);
 
         // Generate the image
         HttpWebRequest httpWebRequest = null;
@@ -250,6 +264,9 @@ public class StableDiffusionMaterial : MonoBehaviour
                 sd.height = height;
                 sd.seed = seed;
                 sd.tiling = tiling;
+
+                if (selectedSampler >= 0 && selectedSampler < samplersList.Length)
+                    sd.sampler_name = samplersList[selectedSampler];
 
                 // Serialize the input parameters
                 string json = JsonConvert.SerializeObject(sd);
