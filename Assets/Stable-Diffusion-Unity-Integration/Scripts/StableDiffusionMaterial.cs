@@ -520,6 +520,7 @@ public class StableDiffusionMaterial : MonoBehaviour
 
     /// <summary>
     /// Create a Normal map based on the gradient in 3x3 surrounding neighborhood.
+    /// Based on UnityCoder code: https://github.com/unitycoder/NormalMapFromTexture
     /// </summary>
     /// <returns>Normal map texture</returns>
     /// <param name="t">Source texture</param>
