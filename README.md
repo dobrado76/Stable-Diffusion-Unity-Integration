@@ -37,7 +37,7 @@ Please refer to the SD WebUI repo: https://github.com/AUTOMATIC1111/stable-diffu
 
 Or;
 
-3. Create and open a new Unity project for Built-in Pipeline, download and import the stable-diffusion-unity-integration.unitypackage file into the project (https://github.com/AUTOMATIC1111/stable-diffusion-webui/stable-diffusion-unity-integration.unitypackage). By starting from a new project and importing the package, none of the demo pre-generated images will be available in the Asset folder but the project should work as-is, since the textures and images are embedded in the Unity project.
+3. Create and open a new Unity project for Built-in Pipeline, download and import the stable-diffusion-unity-integration.unitypackage file into the project (https://github.com/dobrado76/Stable-Diffusion-Unity-Integration/blob/main/Stable-Diffusion-Unity-Integration.unitypackage). By starting from a new project and importing the package, none of the demo pre-generated images will be available in the Asset folder but the project should work as-is, since the textures and images are embedded in the Unity project.
 
 4. Open the Demo Scene provided in the package found in `StableDiffusionIntegration/Scenes/DemoScene.unity`. There is a version with Post-Processing (you need to install the Post-Processing package, you will need to re-open the scene after installing the package) and a version without Post-Processing.
 
