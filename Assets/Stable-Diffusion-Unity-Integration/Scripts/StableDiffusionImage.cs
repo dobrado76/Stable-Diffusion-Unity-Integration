@@ -297,12 +297,15 @@ public class StableDiffusionImage : MonoBehaviour
                 }
             }
 
-            // Force Unity inspector to refresh with new asset
 #if UNITY_EDITOR
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
-            EditorApplication.QueuePlayerLoopUpdate();
-            EditorSceneManager.MarkAllScenesDirty();
-            EditorUtility.RequestScriptReload();
+            if (!Application.isPlaying)
+            {
+                // Force Unity inspector to refresh with new asset
+                AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+                EditorApplication.QueuePlayerLoopUpdate();
+                EditorSceneManager.MarkAllScenesDirty();
+                EditorUtility.RequestScriptReload();
+            }
 #endif
         }
         catch (Exception e)
