@@ -426,14 +426,17 @@ public class StableDiffusionMaterial : MonoBehaviour
 
             // Force the assets and scene to refresh with new material
 #if UNITY_EDITOR
-            EditorUtility.SetDirty(generatedTexture);
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
-            SceneView.RepaintAll();
-            SceneView.FrameLastActiveSceneView();
-            //SceneView.FocusWindowIfItsOpen(typeof(SceneView));
-            EditorApplication.QueuePlayerLoopUpdate();
-            EditorSceneManager.MarkAllScenesDirty();
-            EditorUtility.RequestScriptReload();
+            if (!Application.isPlaying)
+            {
+                EditorUtility.SetDirty(generatedTexture);
+                AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+                SceneView.RepaintAll();
+                SceneView.FrameLastActiveSceneView();
+                //SceneView.FocusWindowIfItsOpen(typeof(SceneView));
+                EditorApplication.QueuePlayerLoopUpdate();
+                EditorSceneManager.MarkAllScenesDirty();
+                EditorUtility.RequestScriptReload();
+            }
 #endif
         }
         catch (Exception e)
