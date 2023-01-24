@@ -2,6 +2,9 @@ using UnityEditor;
 using System;
 using UnityEditor.SceneManagement;
 
+/// <summary>
+/// Component that forces editor to refresh when returning to edit mode
+/// </summary>
 [InitializeOnLoad]
 public static class InspectorRefresh
 {
