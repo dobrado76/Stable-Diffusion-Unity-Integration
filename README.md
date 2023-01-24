@@ -38,7 +38,7 @@ Please refer to the SD WebUI repo: https://github.com/AUTOMATIC1111/stable-diffu
 1. Install [Stable Diffusion WebUI Automatic 1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui).
 2. Launch [Stable DIffusion WebUI Automatic 1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/API) with the '--api' argument in the command line.
 
-3. Either, Download the stable-diffusion-unity-integration repository, for example by running `git clone https://github.com/shadodo76/Stable-Diffusion-Unity-Integration.git`. Then, Open the stable-diffusion-unity-integration project in Unity.then open the Demo Scene provided in the package found in `StableDiffusionIntegration/Scenes/DemoScene.unity`.
+3. Either, Download the stable-diffusion-unity-integration repository, for example by running `git clone https://github.com/dobrado76/Stable-Diffusion-Unity-Integration.git`. Then, Open the stable-diffusion-unity-integration project in Unity.then open the Demo Scene provided in the package found in `StableDiffusionIntegration/Scenes/DemoScene.unity`.
 
 Or;
 
