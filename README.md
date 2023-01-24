@@ -1,5 +1,5 @@
-# Stable Diffusion Unity Integration v1.1.0
-A Unity Editor Component for image generation using Stable Diffusion Automatic 1111 [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) from within the Unity Editor.
+# Stable Diffusion Unity Integration v1.2.0
+A basic but functional Unity Editor Component for image generation using Stable Diffusion Automatic 1111 [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) from within the Unity Editor.
 ![](screenshot.png)
 
 
@@ -10,6 +10,7 @@ Simple server configuration with StableDiffusionConfiguration component and SDSe
 
 Easy Text-to-Image generation for 3D models:
 ![](SDMaterial.png)
+
 Straightforward Text-to-Image generation for UI elements:
 ![](SDImage.png)
 
@@ -43,9 +44,13 @@ Or;
 
 5. Select the StableDiffusionConfiguration component and make sure the selected setting point to the correct URL and Port (default: http://127.0.0.1:7860/).
 6. Click on the `List Model` button to get the list of all available models from your local Stable Diffusion server.
+
 ![](SDListModels.png)
+
 7. Select any existing GameObject with a MeshRenderer (or that contains at least one child with a MeshRenderer) or an Image (or RawImage) and click Generate from the StableDiffusionMaterial or StableDiffusionImage component to generate a new image using the specified parameters. 
+
 ![](SDMaterial.png)
+
 8. If any error occured, it should be catched by a try/catch and the exception displayed in the Unity Console.
 
 - The StableDiffusionMaterial component requires to be added to a GameObject that has a MeshRenderer (if apply recursively is not used) or have at least one children GameObject (if apply recursively is used). 
@@ -82,11 +87,14 @@ Mainly, it allows you to:
 - use or distribute any artwork generated using this tool without the need to mention this tool, repo or author.
 - use, modify, and distribute this code base and other copyrighted work.
 - create derivative works to be distributed under a different license than the original.
+
 Requires that the source code for the derative work be made available to others.
 Requires that any partial, full or modified distribution mention the original source (this repo/author).
 
 
 # Change Log
+2023-01-25: v1.2.0 - Merged Pull Request from ALBRRT to enable Editor assets refresh only when not in Play mode, or returning from Play mode. Also added the display of the GUID for easier reference between the Component and the Image file.
+
 2023-01-24: v1.1.0 - Added handling of the samplers as generation parameter. Manual list in StableDiffusionConfiguration that can be culled to remove samplers that you don't use.
 
 2023-01-23: v1.0.0 - Initial public distribution version 1.0.0 with brief documentation.
