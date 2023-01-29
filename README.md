@@ -1,4 +1,4 @@
-# Stable Diffusion Unity Integration v1.2.0
+# Stable Diffusion Unity Integration v1.2.1
 A basic but functional Unity Editor Component for image generation using Stable Diffusion Automatic 1111 [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) from within the Unity Editor.
 ![](screenshot.png)
 
@@ -97,6 +97,8 @@ Requires that any partial, full or modified distribution mention the original so
 
 
 # Change Log
+2023-01-30: v1.2.1 - Added some comments in the code and updated the package with new codebase, to include last merge and post-processing settings for the demo scene with post-processing.
+
 2023-01-25: v1.2.0 - Merged Pull Request from ALBRRT to enable Editor assets refresh only when not in Play mode, or returning from Play mode. Also added the display of the GUID for easier reference between the Component and the Image file.
 
 2023-01-24: v1.1.0 - Added handling of the samplers as generation parameter. Manual list in StableDiffusionConfiguration that can be culled to remove samplers that you don't use.

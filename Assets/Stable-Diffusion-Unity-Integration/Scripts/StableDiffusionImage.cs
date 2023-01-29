@@ -25,6 +25,9 @@ public class StableDiffusionImage : MonoBehaviour
     public string prompt;
     public string negativePrompt;
 
+    /// <summary>
+    /// List of samplers to display as Drop-Down in the inspector
+    /// </summary>
     [SerializeField]
     public string[] samplersList
     {
@@ -35,6 +38,9 @@ public class StableDiffusionImage : MonoBehaviour
             return sdc.samplers;
         }
     }
+    /// <summary>
+    /// Actual sampler selected in the drop-down list
+    /// </summary>
     [HideInInspector]
     public int selectedSampler = 0;
 
@@ -50,6 +56,9 @@ public class StableDiffusionImage : MonoBehaviour
 
     static private StableDiffusionConfiguration sdc = null;
 
+    /// <summary>
+    /// List of models to display as Drop-Down in the inspector
+    /// </summary>
     [SerializeField]
     public string[] modelsList
     {
@@ -60,6 +69,9 @@ public class StableDiffusionImage : MonoBehaviour
             return sdc.modelNames;
         }
     }
+    /// <summary>
+    /// Actual model selected in the drop-down list
+    /// </summary>
     [HideInInspector]
     public int selectedModel = 0;
 
@@ -115,6 +127,10 @@ public class StableDiffusionImage : MonoBehaviour
 
     // Internally keep tracking if we are currently generating (prevent re-entry)
     bool generating = false;
+
+    /// <summary>
+    /// Callback function for the inspector Generate button.
+    /// </summary>
     public void Generate()
     {
         // Start generation asynchronously
