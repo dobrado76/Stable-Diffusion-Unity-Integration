@@ -2,6 +2,9 @@
 A basic but functional Unity Editor Component for image generation using Stable Diffusion Automatic 1111 [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) from within the Unity Editor.
 ![](screenshot.png)
 
+# Intro Video
+https://youtu.be/8gf5GPzhgk8
+
 # Token of Appreciation
 If you like it, feel free to Buy me a Coffee (https://www.buymeacoffee.com/dobrado76)
 
