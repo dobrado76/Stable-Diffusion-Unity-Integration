@@ -55,7 +55,7 @@ public class StableDiffusionImage : StableDiffusionGenerator
 
     string filename = "";
 
-    static private StableDiffusionConfiguration sdc = null;
+
 
     /// <summary>
     /// List of models to display as Drop-Down in the inspector
