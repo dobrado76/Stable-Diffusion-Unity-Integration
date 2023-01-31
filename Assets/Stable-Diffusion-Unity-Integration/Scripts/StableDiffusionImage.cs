@@ -293,7 +293,9 @@ public class StableDiffusionImage : StableDiffusionGenerator
                 }
             }
         }
-
+#if UNITY_EDITOR
+        EditorUtility.ClearProgressBar();
+#endif
         generating = false;
         yield return null;
     }
