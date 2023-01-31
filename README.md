@@ -1,4 +1,4 @@
-# Stable Diffusion Unity Integration v1.2.2
+# Stable Diffusion Unity Integration v1.2.3
 A basic but functional Unity Editor Component for image generation using Stable Diffusion Automatic 1111 [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) from within the Unity Editor.
 [![Watch the video](screenshot.png)](https://youtu.be/8gf5GPzhgk8)
 
@@ -98,6 +98,8 @@ Requires that any partial, full or modified distribution mention the original so
 
 
 # Change Log
+2023-01-31: v1.2.3 - Merged Pull Request from ALBRRT to fix an issue with progress bar when generating an image with StableDiffusionImage. Not perfect but somewhat/sometimes working ok.
+
 2023-01-31: v1.2.2 - Changed the call to Stable Diffusion server to be asynchronous and non-blocking. Also added a Progress Bar for generation progress feedback.
 
 2023-01-30: v1.2.1 - Added some comments in the code and updated the package with new codebase, to include last merge and post-processing settings for the demo scene with post-processing.

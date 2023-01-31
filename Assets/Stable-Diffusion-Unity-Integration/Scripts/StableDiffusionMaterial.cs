@@ -315,16 +315,13 @@ public class StableDiffusionMaterial : StableDiffusionGenerator
             while (!t.IsCompleted)
             {
                 UpdateGenerationProgress();
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.5f);
             }
             var httpResponse = t.Result;
 
             // Get response from the server
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
-                // Wait for generation to be finished
-                //yield return UpdateGenerationProgress();
-
                 // Decode the response as a JSON string
                 string result = streamReader.ReadToEnd();
 
@@ -337,6 +334,9 @@ public class StableDiffusionMaterial : StableDiffusionGenerator
                     Debug.LogError("No image was return by the server. This should not happen. Verify that the server is correctly setup.");
 
                     generating = false;
+#if UNITY_EDITOR
+                    EditorUtility.ClearProgressBar();
+#endif
                     yield break;
                 }
 

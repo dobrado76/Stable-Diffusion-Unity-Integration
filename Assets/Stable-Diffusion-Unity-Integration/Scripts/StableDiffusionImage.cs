@@ -229,7 +229,7 @@ public class StableDiffusionImage : StableDiffusionGenerator
             while (!t.IsCompleted)
             {
                 UpdateGenerationProgress();
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.5f);
             }
             var httpResponse = t.Result;
 
@@ -247,6 +247,9 @@ public class StableDiffusionImage : StableDiffusionGenerator
                     Debug.LogError("No image was return by the server. This should not happen. Verify that the server is correctly setup.");
 
                     generating = false;
+#if UNITY_EDITOR
+                    EditorUtility.ClearProgressBar();
+#endif
                     yield break;
                 }
 
