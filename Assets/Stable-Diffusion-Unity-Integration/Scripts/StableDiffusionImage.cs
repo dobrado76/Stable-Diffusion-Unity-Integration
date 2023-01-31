@@ -7,6 +7,7 @@ using System.Net;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -17,7 +18,7 @@ using UnityEditor.SceneManagement;
 /// Component to help generate a UI Image or RawImage using Stable Diffusion.
 /// </summary>
 [ExecuteAlways]
-public class StableDiffusionImage : MonoBehaviour
+public class StableDiffusionImage : StableDiffusionGenerator
 {
     [ReadOnly]
     public string guid = "";
@@ -223,8 +224,14 @@ public class StableDiffusionImage : MonoBehaviour
         // Read the output of generation
         if (httpWebRequest != null)
         {
-            // Read the response from the server
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            // Wait that the generation is complete before procedding
+            Task<WebResponse> t = httpWebRequest.GetResponseAsync();
+            while (!t.IsCompleted)
+            {
+                UpdateGenerationProgress();
+                yield return new WaitForSeconds(1);
+            }
+            var httpResponse = t.Result;
 
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using UnityEngine;
+using System.Threading.Tasks;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,7 +16,7 @@ using UnityEditor.SceneManagement;
 /// Component to help generate a Material Texture using Stable Diffusion.
 /// </summary>
 [ExecuteAlways]
-public class StableDiffusionMaterial : MonoBehaviour
+public class StableDiffusionMaterial : StableDiffusionGenerator
 {
     [ReadOnly]
     public string guid = "";
@@ -66,7 +67,6 @@ public class StableDiffusionMaterial : MonoBehaviour
 
     string filename = "";
 
-    static private StableDiffusionConfiguration sdc = null;
     private Texture2D generatedTexture = null;
     private Texture2D generatedNormal = null;
 
@@ -125,6 +125,14 @@ public class StableDiffusionMaterial : MonoBehaviour
         }
 #endif
     }
+
+    private void Start()
+    {
+#if UNITY_EDITOR
+        EditorUtility.ClearProgressBar();
+#endif
+    }
+
 
     /// <summary>
     /// Get the mesh renderer in this object, or in childrens if allowed.
@@ -302,11 +310,21 @@ public class StableDiffusionMaterial : MonoBehaviour
         // Read the output of generation
         if (httpWebRequest != null)
         {
-            // Read the response from the server
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            // Wait that the generation is complete before procedding
+            Task<WebResponse> t = httpWebRequest.GetResponseAsync();
+            while (!t.IsCompleted)
+            {
+                UpdateGenerationProgress();
+                yield return new WaitForSeconds(1);
+            }
+            var httpResponse = t.Result;
 
+            // Get response from the server
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
+                // Wait for generation to be finished
+                //yield return UpdateGenerationProgress();
+
                 // Decode the response as a JSON string
                 string result = streamReader.ReadToEnd();
 
@@ -365,49 +383,11 @@ public class StableDiffusionMaterial : MonoBehaviour
                 }
             }
         }
-
+#if UNITY_EDITOR
+        EditorUtility.ClearProgressBar();
+#endif
         generating = false;
         yield return null;
-    }
-
-
-    /// <summary>
-    /// Find all the game objects that contains a certain component type.
-    /// </summary>
-    /// <typeparam name="T">Type of component to search for</typeparam>
-    /// <param name="g">Game object for which to search it's children</param>
-    /// <param name="active">The game object must be active (true) or can also be not active (false)</param>
-    /// <returns>Array of game object found, all of which containing a component of the specified type</returns>
-    public static T[] FindInChildrenAll<T>(GameObject g, bool active = true) where T : class
-    {
-        List<T> list = new List<T>();
-
-        // Search in all the children of the specified game object
-        foreach (Transform t in g.transform)
-        {
-            // GameObject has no children, skip it
-            if (t == null)
-                continue;
-
-            if (active && !t.gameObject.activeSelf)
-                continue;
-
-            // Found one, check component
-            T comp = t.GetComponent<T>();
-            if (comp != null && comp.ToString() != "null")
-                list.Add(comp);
-
-            // Recursively search into the children of this game object
-            T[] compo = FindInChildrenAll<T>(t.gameObject);
-            if (compo != null && compo.Length > 0)
-            {
-                foreach (T tt in compo)
-                    list.Add(tt);
-            }
-        }
-
-        // Not found, return null
-        return list.ToArray();
     }
 
 

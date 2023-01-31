@@ -13,6 +13,7 @@ public class SDSettings : ScriptableObject
     public string ModelsAPI = "/sdapi/v1/sd-models";
     public string TextToImageAPI = "/sdapi/v1/txt2img";
     public string OptionAPI = "/sdapi/v1/options";
+    public string ProgressAPI = "/sdapi/v1/progress";
     public string OutputFolder = "/streamingAssets";
 
     public string sampler = "Euler a";
@@ -140,5 +141,32 @@ class SDResponse
 class SDOption
 {
     public string sd_model_checkpoint = "";
+}
+
+/// <summary>
+/// Data structure to help deserialize from a JSON the state of the progress of an image generation.
+/// </summary>
+class SDProgressState
+{
+    public bool skipped;
+    public bool interrupted;
+    public string job;
+    public int job_count;
+    public string job_timestamp;
+    public int job_no;
+    public int sampling_step;
+    public int sampling_steps;
+}
+
+/// <summary>
+/// Data structure to help deserialize from a JSON the progress status of an image generation.
+/// </summary>
+class SDProgress
+{
+    public float progress;
+    public float eta_relative;
+    public SDProgressState state;
+    public string current_image;
+    public string textinfo;
 }
 
