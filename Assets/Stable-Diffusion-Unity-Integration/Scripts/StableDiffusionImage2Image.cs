@@ -136,7 +136,7 @@ public class StableDiffusionImage2Image: StableDiffusionGenerator
     public void Generate()
     {
         // Start generation asynchronously
-        if (!generating && !string.IsNullOrEmpty(prompt))
+        if (!generating && !string.IsNullOrEmpty(prompt) && inputTexture)
         {
             if (!inputTexture.isReadable)
             {
