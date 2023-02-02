@@ -24,6 +24,8 @@ Straightforward Text-to-Image generation for UI elements:
 - Text-to-Image generation with Prompt and Negative prompt for:
   a) texturing 3D models having a MeshRenderer component with tiling option and generation of Normal/Bump maps,
   b) UI component having a Image or RawImage component (Canvas, Panel, Image, Button, etc.)
+- Image-to-Image generation with Prompt and Negative prompt for:
+  a) UI component having a Image or RawImage component (Canvas, Panel, Image, Button, etc.)
 - Editor only components for scene/level design (no runtime dependencies to Stable Diffusion)
 - Image generation using any Stable Diffusion models available in the server model folder
 - Standard parameters control over image generation (Prompt and Negative Prompt, Sampler, Nb. of Steps, CFG Scale, Image dimension and Seed)
@@ -52,7 +54,7 @@ Or;
 
 ![](SDListModels.png)
 
-7. Select any existing GameObject with a MeshRenderer (or that contains at least one child with a MeshRenderer) or an Image (or RawImage) and click Generate from the StableDiffusionMaterial or StableDiffusionImage component to generate a new image using the specified parameters. 
+7. Select any existing GameObject with a MeshRenderer (or that contains at least one child with a MeshRenderer) or an Image (or RawImage) and click Generate from the StableDiffusionText2Material, StableDiffusionText2Image or StableDiffusionImage2Image component to generate a new image using the specified parameters. 
 
 ![](SDMaterial.png)
 
@@ -93,8 +95,8 @@ Mainly, it allows you to:
 - use, modify, and distribute this code base and other copyrighted work.
 - create derivative works to be distributed under a different license than the original.
 
-Requires that the source code for the derative work be made available to others.
-Requires that any partial, full or modified distribution mention the original source (this repo/author).
+Requires that the source code for the derative work be made available to others. This does not introduce any limitations on your own Unity projects, since this tool is a Design time, Editor only tool (your game or application is obviously not required to be open source).
+Requires that any partial, full or modified distribution of this repo mentions the original source (this repo/author).
 
 
 # Change Log
