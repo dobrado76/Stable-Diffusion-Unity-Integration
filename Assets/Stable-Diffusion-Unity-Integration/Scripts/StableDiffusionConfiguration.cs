@@ -1,10 +1,12 @@
+using System;
 using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Http;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Global Stable Diffusion parameters configuration.
@@ -54,15 +56,18 @@ public class StableDiffusionConfiguration : MonoBehaviour
         // Stable diffusion API url for getting the models list
         string url = settings.StableDiffusionServerURL + settings.ModelsAPI;
 
-        try
+        // uses auth to request data from api
+        if (settings.useAuth && !settings.user.Equals("") && !settings.pass.Equals(""))
         {
-            using (WebClient client = new WebClient())
+            using (UnityWebRequest modelInfoRequest = UnityWebRequest.Get(url))
             {
-                // Send the GET request
-                string responseBody = client.DownloadString(url);
+                byte[] bytesToEncode = Encoding.UTF8.GetBytes(settings.user + ":" + settings.pass);
+                string encodedCredentials = Convert.ToBase64String(bytesToEncode);
+                modelInfoRequest.SetRequestHeader("Authorization", "Basic " + encodedCredentials);
+                yield return modelInfoRequest.SendWebRequest();
 
                 // Deserialize the response to a class
-                Model[] ms = JsonConvert.DeserializeObject<Model[]>(responseBody);
+                Model[] ms = JsonConvert.DeserializeObject<Model[]>(modelInfoRequest.downloadHandler.text);
 
                 // Keep only the names of the models
                 List<string> modelsNames = new List<string>();
@@ -74,9 +79,33 @@ public class StableDiffusionConfiguration : MonoBehaviour
                 modelNames = modelsNames.ToArray();
             }
         }
-        catch (WebException e)
+        // request data without auth
+        else
         {
-            Debug.LogError("Error: " + e.Message);
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    // Send the GET request
+                    string responseBody = client.DownloadString(url);
+
+                    // Deserialize the response to a class
+                    Model[] ms = JsonConvert.DeserializeObject<Model[]>(responseBody);
+
+                    // Keep only the names of the models
+                    List<string> modelsNames = new List<string>();
+
+                    foreach (Model m in ms)
+                        modelsNames.Add(m.model_name);
+
+                    // Convert the list into an array and store it for futur use
+                    modelNames = modelsNames.ToArray();
+                }
+            }
+            catch (WebException e)
+            {
+                Debug.LogError("Error: " + e.Message);
+            }
         }
 
         yield return null;
@@ -103,6 +132,15 @@ public class StableDiffusionConfiguration : MonoBehaviour
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
+            // add auth-header to request
+            if (settings.useAuth && !settings.user.Equals("") && !settings.pass.Equals(""))
+            {
+                httpWebRequest.PreAuthenticate = true;
+                byte[] bytesToEncode = Encoding.UTF8.GetBytes(settings.user + ":" + settings.pass);
+                string encodedCredentials = Convert.ToBase64String(bytesToEncode);
+                httpWebRequest.Headers.Add("Authorization", "Basic " + encodedCredentials);
+            }
+            
             // Write to the stream the JSON parameters to set a model
             if (httpWebRequest != null)
             {
