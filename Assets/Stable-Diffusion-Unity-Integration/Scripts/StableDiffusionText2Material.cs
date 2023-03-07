@@ -1,9 +1,9 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
 using UnityEngine;
 using System.Threading.Tasks;
 
@@ -279,6 +279,15 @@ public class StableDiffusionText2Material : StableDiffusionGenerator
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
+            // add auth-header to request
+            if (sdc.settings.useAuth && !sdc.settings.user.Equals("") && !sdc.settings.pass.Equals(""))
+            {
+                httpWebRequest.PreAuthenticate = true;
+                byte[] bytesToEncode = Encoding.UTF8.GetBytes(sdc.settings.user + ":" + sdc.settings.pass);
+                string encodedCredentials = Convert.ToBase64String(bytesToEncode);
+                httpWebRequest.Headers.Add("Authorization", "Basic " + encodedCredentials);
+            }
+            
             // Send the generation parameters along with the POST request
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
@@ -314,8 +323,16 @@ public class StableDiffusionText2Material : StableDiffusionGenerator
             Task<WebResponse> t = httpWebRequest.GetResponseAsync();
             while (!t.IsCompleted)
             {
-                UpdateGenerationProgress();
-                yield return new WaitForSeconds(0.5f);
+                if (sdc.settings.useAuth && !sdc.settings.user.Equals("") && !sdc.settings.pass.Equals(""))
+                {
+                    UpdateGenerationProgressWithAuth();
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else
+                {
+                    UpdateGenerationProgress();
+                    yield return new WaitForSeconds(0.5f);
+                }
             }
             var httpResponse = t.Result;
 
@@ -403,8 +420,11 @@ public class StableDiffusionText2Material : StableDiffusionGenerator
             if (mr == null)
                 return;
 
-            // Set the material to a default Standard material with a texture
-            Shader standardShader = Shader.Find("Standard");
+            Shader standardShader = sdc.settings.useUniversalRenderPipeline ? Shader.Find("Universal Render Pipeline/Lit") : Shader.Find("Standard");
+            
+            if(!standardShader)
+                Debug.LogError("Shader setup wrong: Please check if you're project uses 'Standard' or 'Universal Render Pipeline'");
+            
             mr.sharedMaterial = new Material(standardShader);
             mr.sharedMaterial.mainTexture = texture;
             generatedTexture = texture;
