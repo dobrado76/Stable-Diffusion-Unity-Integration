@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -9,6 +7,7 @@ using UnityEngine;
 /// </summary>
 public class SDSettings : ScriptableObject
 {
+    [Header("AUTOMATIC1111 Settings")]
     public string StableDiffusionServerURL = "http://127.0.0.1:7860";
     public string ModelsAPI = "/sdapi/v1/sd-models";
     public string TextToImageAPI = "/sdapi/v1/txt2img";
@@ -16,13 +15,20 @@ public class SDSettings : ScriptableObject
     public string OptionAPI = "/sdapi/v1/options";
     public string ProgressAPI = "/sdapi/v1/progress";
     public string OutputFolder = "/streamingAssets";
-
     public string sampler = "Euler a";
     public int width = 512;
     public int height = 512;
     public int steps = 35;
     public float cfgScale = 7;
     public long seed = -1;
+    
+    [Header("API Settings")]
+    public bool useAuth = false;
+    public string user = "";
+    public string pass = "";
+    
+    [Header("URP Settings")]
+    public bool useUniversalRenderPipeline = false;
 }
 
 /// <summary>
