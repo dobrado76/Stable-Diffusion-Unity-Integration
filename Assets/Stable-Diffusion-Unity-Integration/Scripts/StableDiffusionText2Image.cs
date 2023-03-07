@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using UnityEngine;
 using System.Linq;
+using System.Text;
 using UnityEngine.UI;
 using System.Threading.Tasks;
 
@@ -193,6 +194,15 @@ public class StableDiffusionText2Image : StableDiffusionGenerator
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
+            // add auth-header to request
+            if (sdc.settings.useAuth && !sdc.settings.user.Equals("") && !sdc.settings.pass.Equals(""))
+            {
+                httpWebRequest.PreAuthenticate = true;
+                byte[] bytesToEncode = Encoding.UTF8.GetBytes(sdc.settings.user + ":" + sdc.settings.pass);
+                string encodedCredentials = Convert.ToBase64String(bytesToEncode);
+                httpWebRequest.Headers.Add("Authorization", "Basic " + encodedCredentials);
+            }
+            
             // Send the generation parameters along with the POST request
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
@@ -228,8 +238,16 @@ public class StableDiffusionText2Image : StableDiffusionGenerator
             Task<WebResponse> t = httpWebRequest.GetResponseAsync();
             while (!t.IsCompleted)
             {
-                UpdateGenerationProgress();
-                yield return new WaitForSeconds(0.5f);
+                if (sdc.settings.useAuth && !sdc.settings.user.Equals("") && !sdc.settings.pass.Equals(""))
+                {
+                    UpdateGenerationProgressWithAuth();
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else
+                {
+                    UpdateGenerationProgress();
+                    yield return new WaitForSeconds(0.5f);
+                }
             }
             var httpResponse = t.Result;
 
