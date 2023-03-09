@@ -56,59 +56,39 @@ public class StableDiffusionConfiguration : MonoBehaviour
         // Stable diffusion API url for getting the models list
         string url = settings.StableDiffusionServerURL + settings.ModelsAPI;
 
-        // uses auth to request data from api
+        UnityWebRequest request = new UnityWebRequest(url, "GET");
+        request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        
         if (settings.useAuth && !settings.user.Equals("") && !settings.pass.Equals(""))
         {
-            using (UnityWebRequest modelInfoRequest = UnityWebRequest.Get(url))
-            {
-                byte[] bytesToEncode = Encoding.UTF8.GetBytes(settings.user + ":" + settings.pass);
-                string encodedCredentials = Convert.ToBase64String(bytesToEncode);
-                modelInfoRequest.SetRequestHeader("Authorization", "Basic " + encodedCredentials);
-                yield return modelInfoRequest.SendWebRequest();
-
-                // Deserialize the response to a class
-                Model[] ms = JsonConvert.DeserializeObject<Model[]>(modelInfoRequest.downloadHandler.text);
-
-                // Keep only the names of the models
-                List<string> modelsNames = new List<string>();
-
-                foreach (Model m in ms)
-                    modelsNames.Add(m.model_name);
-
-                // Convert the list into an array and store it for futur use
-                modelNames = modelsNames.ToArray();
-            }
+            Debug.Log("Using API key to authenticate");
+            byte[] bytesToEncode = Encoding.UTF8.GetBytes(settings.user + ":" + settings.pass);
+            string encodedCredentials = Convert.ToBase64String(bytesToEncode);
+            request.SetRequestHeader("Authorization", "Basic " + encodedCredentials);
         }
-        // request data without auth
-        else
+        
+        yield return request.SendWebRequest();
+
+        try
         {
-            try
-            {
-                using (WebClient client = new WebClient())
-                {
-                    // Send the GET request
-                    string responseBody = client.DownloadString(url);
+            // Deserialize the response to a class
+            Model[] ms = JsonConvert.DeserializeObject<Model[]>(request.downloadHandler.text);
 
-                    // Deserialize the response to a class
-                    Model[] ms = JsonConvert.DeserializeObject<Model[]>(responseBody);
+            // Keep only the names of the models
+            List<string> modelsNames = new List<string>();
 
-                    // Keep only the names of the models
-                    List<string> modelsNames = new List<string>();
+            foreach (Model m in ms) 
+                modelsNames.Add(m.model_name);
 
-                    foreach (Model m in ms)
-                        modelsNames.Add(m.model_name);
-
-                    // Convert the list into an array and store it for futur use
-                    modelNames = modelsNames.ToArray();
-                }
-            }
-            catch (WebException e)
-            {
-                Debug.LogError("Error: " + e.Message);
-            }
+            // Convert the list into an array and store it for futur use
+            modelNames = modelsNames.ToArray();
         }
-
-        yield return null;
+        catch (Exception)
+        {
+            Debug.Log(request.downloadHandler.text);
+            Debug.Log("Server needs and API key authentication. Please check your settings!");
+        }
     }
 
     /// <summary>
