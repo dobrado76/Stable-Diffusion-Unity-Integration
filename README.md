@@ -89,6 +89,7 @@ If you are submitting a bug fix, there must be a way for me to reproduce the bug
 
 # Credits
 Thanks to [UnityCoder](https://github.com/unitycoder/NormalMapFromTexture) for a straightforward and functional algorithm to automatically generate a normal map from a texture. - https://github.com/unitycoder/NormalMapFromTexture
+Thanks to ALBRRT and FOXYTOCIN for their contributions.
 
 
 # Licence
