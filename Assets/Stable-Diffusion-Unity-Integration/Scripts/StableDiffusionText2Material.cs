@@ -105,7 +105,7 @@ public class StableDiffusionText2Material : StableDiffusionGenerator
             if (sdc != null)
             {
                 SDSettings settings = sdc.settings;
-                if (settings == null)
+                if (settings != null)
                 {
 
                     width = settings.width;
@@ -320,23 +320,21 @@ public class StableDiffusionText2Material : StableDiffusionGenerator
         if (httpWebRequest != null)
         {
             // Wait that the generation is complete before procedding
-            Task<WebResponse> t = httpWebRequest.GetResponseAsync();
-            while (!t.IsCompleted)
+            Task<WebResponse> webResponse = httpWebRequest.GetResponseAsync();
+
+            while (!webResponse.IsCompleted)
             {
                 if (sdc.settings.useAuth && !sdc.settings.user.Equals("") && !sdc.settings.pass.Equals(""))
-                {
                     UpdateGenerationProgressWithAuth();
-                    yield return new WaitForSeconds(0.5f);
-                }
                 else
-                {
                     UpdateGenerationProgress();
-                    yield return new WaitForSeconds(0.5f);
-                }
-            }
-            var httpResponse = t.Result;
 
-            // Get response from the server
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            // Stream the result from the server
+            var httpResponse = webResponse.Result;
+
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 // Decode the response as a JSON string

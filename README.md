@@ -1,4 +1,4 @@
-# Stable Diffusion Unity Integration v1.2.4
+# Stable Diffusion Unity Integration v1.2.5
 A basic but functional Unity Editor Component for image generation using Stable Diffusion Automatic 1111 [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) from within the Unity Editor.
 [![Watch the video](screenshot.png)](https://youtu.be/8gf5GPzhgk8)
 
@@ -33,13 +33,17 @@ Straightforward Text-to-Image generation for UI elements:
 
 
 # Dependencies and requirements
-This Unity Editor tool requires access to a local Stable Diffusion Automatic 1111 server. Installation of this server is outside the scope of this documentation. 
-Please refer to the SD WebUI repo: https://github.com/AUTOMATIC1111/stable-diffusion-webui
+This Unity Editor tool requires access to a Stable Diffusion Automatic 1111 server. Installation or usage of such server is outside the scope of this documentation. 
+Please refer to the SD A111 WebUI repo: https://github.com/AUTOMATIC1111/stable-diffusion-webui
 
 
 # Getting Started
 1. Install [Stable Diffusion WebUI Automatic 1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui).
-2. Launch [Stable DIffusion WebUI Automatic 1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/API) with the '--api' argument in the command line.
+2. Launch [Stable DIffusion WebUI Automatic 1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/API) with the '--api' argument in the command line define in the "webui-user.bat" command file, in the root folder of your SD server.
+Without Authentication:
+set COMMANDLINE_ARGS= --api
+	; Or with Authentication:	
+set COMMANDLINE_ARGS=--listen --api --api-auth YOUR_USERNAME:YOUR_PASSWORD --cors-allow-origins=*
 
 3. Either, Download the stable-diffusion-unity-integration repository, for example by running `git clone https://github.com/dobrado76/Stable-Diffusion-Unity-Integration.git`. Then, Open the stable-diffusion-unity-integration project in Unity.then open the Demo Scene provided in the package found in `StableDiffusionIntegration/Scenes/DemoScene.unity`.
 
@@ -67,7 +71,7 @@ Or;
 # Limitations
 Be aware of a few limitations:
 - This repo has been testing only in Unity 2019, 2020 and 2021. It may work on other versions but there is no guarantee. 
-- The components for generating materials are designed for the Built-in render pipeline only. It may be easy to get it to work for URP or HDRP but no effort has been done in that regard. Feel free to contribute your changes if you make it work.
+- The components for generating materials are designed for the Built-in render pipeline and Universal Render Pipeline (URP) only. It may be easy to get it to work for HDRP but no effort has been done in that regard. Feel free to contribute your changes if you make it work.
 - Only a local Stable Diffusion server, which requires no API key, was used in testing. This may work with remote servers if they don't require API keys. Feel free to contribute your changes if you get it to work with remote server and API keys.
 
 
@@ -100,7 +104,9 @@ Requires that any partial, full or modified distribution of this repo mentions t
 
 
 # Change Log
-2023-02-32: v1.2.4 - Merged Pull Request from ALBRRT to add support for Image-2-Image for UI Image and RawImage. To that effect, renamed StableDiffusionImage to StableDiffusionText2Image and StableDiffusionMaterial to StableDiffusionText2Material, and added a new StableDiffusionImage2Image component.
+2023-03-10: v1.2.5 - Merged Pull Request from FOXYTOCIN to add support for Authentication API keys and URP materials.
+
+2023-02-02: v1.2.4 - Merged Pull Request from ALBRRT to add support for Image-2-Image for UI Image and RawImage. To that effect, renamed StableDiffusionImage to StableDiffusionText2Image and StableDiffusionMaterial to StableDiffusionText2Material, and added a new StableDiffusionImage2Image component.
 
 2023-01-31: v1.2.3 - Merged Pull Request from ALBRRT to fix an issue with progress bar when generating an image with StableDiffusionImage. Not perfect but somewhat/sometimes working ok.
 
