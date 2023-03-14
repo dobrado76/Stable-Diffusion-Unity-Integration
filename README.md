@@ -1,4 +1,4 @@
-# Stable Diffusion Unity Integration v1.2.5
+# Stable Diffusion Unity Integration v1.2.6
 A basic but functional Unity Editor Component for image generation using Stable Diffusion Automatic 1111 [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) from within the Unity Editor.
 [![Watch the video](screenshot.png)](https://youtu.be/8gf5GPzhgk8)
 
@@ -88,8 +88,8 @@ If you are submitting a bug fix, there must be a way for me to reproduce the bug
 
 
 # Credits
-Thanks to [UnityCoder](https://github.com/unitycoder/NormalMapFromTexture) for a straightforward and functional algorithm to automatically generate a normal map from a texture. - https://github.com/unitycoder/NormalMapFromTexture
-Thanks to ALBRRT and FOXYTOCIN for their contributions.
+Thanks to [UnityCoder](https://github.com/unitycoder/NormalMapFromTexture) for a straightforward and functional algorithm to automatically generate a normal map from a texture. - https://github.com/unitycoder/NormalMapFromTexture.
+Also, thanks to [ALBRRT](https://github.com/albrrt), [FOXYTOCIN](https://github.com/Foxytocin), [PeixuanL](https://github.com/PeixuanL) for their contributions here.
 
 
 # Licence
@@ -105,17 +105,19 @@ Requires that any partial, full or modified distribution of this repo mentions t
 
 
 # Change Log
-2023-03-10: v1.2.5 - Merged Pull Request from FOXYTOCIN to add support for Authentication API keys and URP materials.
+2023-03-15: v1.2.6 - Added StableDiffusionImage2Material, thanks to [PeixuanL](https://github.com/PeixuanL).
 
-2023-02-02: v1.2.4 - Merged Pull Request from ALBRRT to add support for Image-2-Image for UI Image and RawImage. To that effect, renamed StableDiffusionImage to StableDiffusionText2Image and StableDiffusionMaterial to StableDiffusionText2Material, and added a new StableDiffusionImage2Image component.
+2023-03-10: v1.2.5 - Merged Pull Request from [FOXYTOCIN](https://github.com/Foxytocin) to add support for Authentication API keys and URP materials.
 
-2023-01-31: v1.2.3 - Merged Pull Request from ALBRRT to fix an issue with progress bar when generating an image with StableDiffusionImage. Not perfect but somewhat/sometimes working ok.
+2023-02-02: v1.2.4 - Merged Pull Request from [ALBRRT](https://github.com/albrrt) to add support for Image-2-Image for UI Image and RawImage. To that effect, renamed StableDiffusionImage to StableDiffusionText2Image and StableDiffusionMaterial to StableDiffusionText2Material, and added a new StableDiffusionImage2Image component.
+
+2023-01-31: v1.2.3 - Merged Pull Request from [ALBRRT](https://github.com/albrrt) to fix an issue with progress bar when generating an image with StableDiffusionImage. Not perfect but somewhat/sometimes working ok.
 
 2023-01-31: v1.2.2 - Changed the call to Stable Diffusion server to be asynchronous and non-blocking. Also added a Progress Bar for generation progress feedback.
 
 2023-01-30: v1.2.1 - Added some comments in the code and updated the package with new codebase, to include last merge and post-processing settings for the demo scene with post-processing.
 
-2023-01-25: v1.2.0 - Merged Pull Request from ALBRRT to enable Editor assets refresh only when not in Play mode, or returning from Play mode. Also added the display of the GUID for easier reference between the Component and the Image file.
+2023-01-25: v1.2.0 - Merged Pull Request from [ALBRRT](https://github.com/albrrt) to enable Editor assets refresh only when not in Play mode, or returning from Play mode. Also added the display of the GUID for easier reference between the Component and the Image file.
 
 2023-01-24: v1.1.0 - Added handling of the samplers as generation parameter. Manual list in StableDiffusionConfiguration that can be culled to remove samplers that you don't use.
 
