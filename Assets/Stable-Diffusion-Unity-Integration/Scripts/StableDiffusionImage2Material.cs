@@ -33,7 +33,7 @@ public class StableDiffusionImage2Material : StableDiffusionGenerator
         get
         {
             if (sdc == null)
-                sdc = GameObject.FindObjectOfType<StableDiffusionConfiguration>();
+                sdc = GameObject.FindAnyObjectByType<StableDiffusionConfiguration>();
             return sdc.samplers;
         }
     }
@@ -84,7 +84,7 @@ public class StableDiffusionImage2Material : StableDiffusionGenerator
         get
         {
             if (sdc == null)
-                sdc = GameObject.FindObjectOfType<StableDiffusionConfiguration>();
+                sdc = GameObject.FindAnyObjectByType<StableDiffusionConfiguration>();
             return sdc.modelNames;
         }
     }
@@ -106,13 +106,12 @@ public class StableDiffusionImage2Material : StableDiffusionGenerator
 #if UNITY_EDITOR
         if (width < 0 || height < 0)
         {
-            StableDiffusionConfiguration sdc = GameObject.FindObjectOfType<StableDiffusionConfiguration>();
+            StableDiffusionConfiguration sdc = GameObject.FindAnyObjectByType<StableDiffusionConfiguration>();
             if (sdc != null)
             {
                 SDSettings settings = sdc.settings;
-                if (settings == null)
+                if (settings != null)
                 {
-
                     width = settings.width;
                     height = settings.height;
                     steps = settings.steps;
@@ -233,7 +232,7 @@ public class StableDiffusionImage2Material : StableDiffusionGenerator
     {
         // Get the configuration settings
         if (sdc == null)
-            sdc = GameObject.FindObjectOfType<StableDiffusionConfiguration>();
+            sdc = GameObject.FindAnyObjectByType<StableDiffusionConfiguration>();
 
         try
         {
