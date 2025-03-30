@@ -1,4 +1,4 @@
-# Stable Diffusion Unity Integration v1.2.6
+# Stable Diffusion Unity Integration v1.3.0
 A basic but functional Unity Editor Component for image generation using Stable Diffusion Automatic 1111 [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) from within the Unity Editor.
 [![Watch the video](screenshot.png)](https://youtu.be/8gf5GPzhgk8)
 
@@ -30,6 +30,7 @@ Straightforward Text-to-Image generation for UI elements:
 - Image generation using any Stable Diffusion models available in the server model folder
 - Standard parameters control over image generation (Prompt and Negative Prompt, Sampler, Nb. of Steps, CFG Scale, Image dimension and Seed)
 - All images saved in the Assets folder for persistent storage and reference
+- Can run from a local Stable Diffusion server, which requires no API key, or from an online surver such as a Runpod Virtual instance.
 
 
 # Dependencies and requirements
@@ -72,7 +73,6 @@ Or;
 Be aware of a few limitations:
 - This repo has been testing only in Unity 2019, 2020 and 2021. It may work on other versions but there is no guarantee. 
 - The components for generating materials are designed for the Built-in render pipeline and Universal Render Pipeline (URP) only. It may be easy to get it to work for HDRP but no effort has been done in that regard. Feel free to contribute your changes if you make it work.
-- Only a local Stable Diffusion server, which requires no API key, was used in testing. This may work with remote servers if they don't require API keys. Feel free to contribute your changes if you get it to work with remote server and API keys.
 
 
 # Contributing
@@ -90,7 +90,7 @@ If you are submitting a bug fix, there must be a way for me to reproduce the bug
 # Credits
 Thanks to [UnityCoder](https://github.com/unitycoder/NormalMapFromTexture) for a straightforward and functional algorithm to automatically generate a normal map from a texture. - https://github.com/unitycoder/NormalMapFromTexture.
 Also, thanks to [ALBRRT](https://github.com/albrrt), [FOXYTOCIN](https://github.com/Foxytocin), [PeixuanL](https://github.com/PeixuanL) for their contributions here.
-
+Additional thank you to [TeoVibe](https://github.com/TeoVibe) for adding suport to online cloud Runpod server, as well as a more solid error catching/handling in various situations. 
 
 # Licence
 This repository is under Lesser General Public License (LGPL) v2.1, that you can find in the `LICENSE` file (https://github.com/dobrado76/Stable-Diffusion-Unity-Integration/blob/72560920786b909e829b567567699f332256ea19/LICENSE).
@@ -105,6 +105,8 @@ Requires that any partial, full or modified distribution of this repo mentions t
 
 
 # Change Log
+2025-03-30: v1.3.0 - Merged Pull Request from [TeoVibe](https://github.com/TeoVibe), thanks for your contribution adding support for online cloud Runpod server.
+
 2023-03-15: v1.2.6 - Added StableDiffusionImage2Material, thanks to [PeixuanL](https://github.com/PeixuanL).
 
 2023-03-10: v1.2.5 - Merged Pull Request from [FOXYTOCIN](https://github.com/Foxytocin) to add support for Authentication API keys and URP materials.
