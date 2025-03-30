@@ -71,7 +71,7 @@ Or;
 
 # Limitations
 Be aware of a few limitations:
-- This repo has been testing only in Unity 2019, 2020 and 2021. It may work on other versions but there is no guarantee. 
+- This repo has been testing only in some versions of Unity (2019, 2020, 2021 and Unity 6). It is believed that it has only basic low level Unity dependencies and should work in any versions. 
 - The components for generating materials are designed for the Built-in render pipeline and Universal Render Pipeline (URP) only. It may be easy to get it to work for HDRP but no effort has been done in that regard. Feel free to contribute your changes if you make it work.
 
 
