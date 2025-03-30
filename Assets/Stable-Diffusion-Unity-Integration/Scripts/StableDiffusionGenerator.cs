@@ -19,23 +19,50 @@ public class StableDiffusionGenerator : MonoBehaviour
     protected void UpdateGenerationProgress()
     {
 #if UNITY_EDITOR
-        // Stable diffusion API url for setting a model
+        if (_updateProgressRunning != null) return;
+        _updateProgressRunning = StartCoroutine(UpdateGenerationProgressCor());
+#endif
+    }
+    
+    private IEnumerator UpdateGenerationProgressCor()
+    {
+#if UNITY_EDITOR
+        // Stable diffusion API url for getting progress
         string url = sdc.settings.StableDiffusionServerURL + sdc.settings.ProgressAPI;
-
         float progress = 0;
 
-        using (WebClient client = new WebClient())
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
-            // Send the GET request
-            string responseBody = client.DownloadString(url);
-
-            // Deserialize the response to a class
-            SDProgress sdp = JsonConvert.DeserializeObject<SDProgress>(responseBody);
-            progress = sdp.progress;
-
-            EditorUtility.DisplayProgressBar("Generation in progress", (progress*100).ToString("F1") + "%", progress);
+            request.SetRequestHeader("Content-Type", "application/json");
+            
+            yield return request.SendWebRequest();
+            
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogWarning("Failed to get progress: " + request.error);
+                EditorUtility.DisplayProgressBar("Generation in progress", "Progress unknown...", 0.5f);
+            }
+            else
+            {
+                try
+                {
+                    // Deserialize the response to a class
+                    SDProgress sdp = JsonConvert.DeserializeObject<SDProgress>(request.downloadHandler.text);
+                    progress = sdp.progress;
+                    
+                    EditorUtility.DisplayProgressBar("Generation in progress", (progress*100).ToString("F1") + "%", progress);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning("Error parsing progress: " + e.Message);
+                    EditorUtility.DisplayProgressBar("Generation in progress", "Progress unknown...", 0.5f);
+                }
+            }
         }
+        
+        _updateProgressRunning = null;
 #endif
+        yield return null;
     }
 
     /// <summary>
