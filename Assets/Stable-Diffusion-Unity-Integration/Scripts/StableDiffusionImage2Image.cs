@@ -8,7 +8,9 @@ using UnityEngine;
 using System.Linq;
 using System.Text;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using System.Threading.Tasks;
+using Math = System.Math;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -191,138 +193,132 @@ public class StableDiffusionImage2Image: StableDiffusionGenerator
         // Set the model parameters
         yield return sdc.SetModelAsync(modelsList[selectedModel]);
 
-        // Generate the image
-        HttpWebRequest httpWebRequest = null;
-        try
-        {
-            // Make a HTTP POST request to the Stable Diffusion server
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(sdc.settings.StableDiffusionServerURL + sdc.settings.ImageToImageAPI);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
+        // Generate the image using UnityWebRequest for better compatibility with cloud-hosted services
+        string url = sdc.settings.StableDiffusionServerURL + sdc.settings.ImageToImageAPI;
+        Debug.Log("Sending request to: " + url);
+        
+        // Prepare the request data
+        byte[] inputImgBytes = inputTexture.EncodeToPNG();
+        string inputImgString = Convert.ToBase64String(inputImgBytes);
 
-            // add auth-header to request
+        SDParamsInImg2Img sd = new SDParamsInImg2Img();
+        sd.init_images = new string[] { inputImgString };
+        sd.prompt = prompt;
+        sd.negative_prompt = negativePrompt;
+        sd.steps = steps;
+        sd.cfg_scale = cfgScale;
+        sd.width = width;
+        sd.height = height;
+        sd.seed = seed;
+        sd.tiling = false;
+
+        if (selectedSampler >= 0 && selectedSampler < samplersList.Length)
+            sd.sampler_name = samplersList[selectedSampler];
+
+        // Serialize the input parameters
+        string jsonData = JsonConvert.SerializeObject(sd);
+        Debug.Log("Sending JSON data (truncated): " + jsonData.Substring(0, Math.Min(100, jsonData.Length)) + "...");
+        
+        // Create the request
+        UnityWebRequest request = new UnityWebRequest(url, "POST");
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(jsonData));
+        request.SetRequestHeader("Content-Type", "application/json");
+        
+        // Add authentication if needed
+        if (sdc.settings.useAuth && !sdc.settings.user.Equals("") && !sdc.settings.pass.Equals(""))
+        {
+            byte[] bytesToEncode = Encoding.UTF8.GetBytes(sdc.settings.user + ":" + sdc.settings.pass);
+            string encodedCredentials = Convert.ToBase64String(bytesToEncode);
+            request.SetRequestHeader("Authorization", "Basic " + encodedCredentials);
+        }
+        
+        // Send the request
+        request.SendWebRequest();
+        
+        // Wait for the request to complete while showing progress
+        while (!request.isDone)
+        {
             if (sdc.settings.useAuth && !sdc.settings.user.Equals("") && !sdc.settings.pass.Equals(""))
+                UpdateGenerationProgressWithAuth();
+            else
+                UpdateGenerationProgress();
+                
+            yield return new WaitForSeconds(0.5f);
+        }
+        
+        // Check if the request was successful
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("Request error: " + request.error);
+            Debug.LogError("Response code: " + request.responseCode);
+            Debug.LogError("Response: " + request.downloadHandler.text);
+            
+            if (request.responseCode == 405)
             {
-                httpWebRequest.PreAuthenticate = true;
-                byte[] bytesToEncode = Encoding.UTF8.GetBytes(sdc.settings.user + ":" + sdc.settings.pass);
-                string encodedCredentials = Convert.ToBase64String(bytesToEncode);
-                httpWebRequest.Headers.Add("Authorization", "Basic " + encodedCredentials);
+                Debug.LogError("405 Method Not Allowed - This is common with RunPod. Make sure you launched with --api flag and check your firewall/proxy settings.");
+                Debug.LogError("For RunPod, you might need to configure CORS settings or use their API proxy.");
             }
             
-            // Send the generation parameters along with the POST request
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            generating = false;
+#if UNITY_EDITOR
+            EditorUtility.ClearProgressBar();
+#endif
+            yield break;
+        }
+        
+        string responseText = request.downloadHandler.text;
+        Debug.Log("Response received: " + responseText.Substring(0, Math.Min(100, responseText.Length)) + "...");
+
+        try {
+            // Deserialize the JSON string into a data structure
+            SDResponseImg2Img json = JsonConvert.DeserializeObject<SDResponseImg2Img>(responseText);
+
+            // If no image, there was probably an error so abort
+            if (json.images == null || json.images.Length == 0)
             {
-                byte[] inputImgBytes = inputTexture.EncodeToPNG();
-                string inputImgString = Convert.ToBase64String(inputImgBytes);
+                Debug.LogError("No image was returned by the server. Verify that the server is correctly setup.");
+                Debug.LogError("Full response: " + responseText);
 
-                SDParamsInImg2Img sd = new SDParamsInImg2Img();
-                sd.init_images = new string[] { inputImgString };
-                sd.prompt = prompt;
-                sd.negative_prompt = negativePrompt;
-                sd.steps = steps;
-                sd.cfg_scale = cfgScale;
-                sd.width = width;
-                sd.height = height;
-                sd.seed = seed;
-                sd.tiling = false;
+                generating = false;
+#if UNITY_EDITOR
+                EditorUtility.ClearProgressBar();
+#endif
+                yield break;
+            }
 
-                if (selectedSampler >= 0 && selectedSampler < samplersList.Length)
-                    sd.sampler_name = samplersList[selectedSampler];
+            // Decode the image from Base64 string into an array of bytes
+            byte[] imageData = Convert.FromBase64String(json.images[0]);
 
-                // Serialize the input parameters
-                string json = JsonConvert.SerializeObject(sd);
+            // Write it in the specified project output folder
+            WriteImageFile(imageData, filename);
 
-                // Send to the server
-                streamWriter.Write(json);
+            // Read back the image into a texture
+            if (File.Exists(filename))
+            {
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(imageData);
+                texture.Apply();
+
+                LoadIntoImage(texture);
+            }
+
+            // Read the generation info back (only seed should have changed, as the generation picked a particular seed)
+            if (json.info != "")
+            {
+                SDParamsOutTxt2Img info = JsonConvert.DeserializeObject<SDParamsOutTxt2Img>(json.info);
+
+                // Read the seed that was used by Stable Diffusion to generate this result
+                generatedSeed = info.seed;
             }
         }
         catch (Exception e)
         {
-            Debug.LogError(e.Message + "\n\n" + e.StackTrace);
+            Debug.LogError("Error processing response: " + e.Message);
+            Debug.LogError("Stack trace: " + e.StackTrace);
+            Debug.LogError("Response was: " + responseText);
         }
-
-        // Read the output of generation
-        if (httpWebRequest != null)
-        {
-            // Wait that the generation is complete before procedding
-            Task<WebResponse> webResponse = httpWebRequest.GetResponseAsync();
-
-            while (!webResponse.IsCompleted)
-            {
-                if (sdc.settings.useAuth && !sdc.settings.user.Equals("") && !sdc.settings.pass.Equals(""))
-                    UpdateGenerationProgressWithAuth();
-                else
-                    UpdateGenerationProgress();
-
-                yield return new WaitForSeconds(0.5f);
-            }
-
-            // Stream the result from the server
-            var httpResponse = webResponse.Result;
-
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                // Decode the response as a JSON string
-                string result = streamReader.ReadToEnd();
-
-                // Deserialize the JSON string into a data structure
-                SDResponseImg2Img json = JsonConvert.DeserializeObject<SDResponseImg2Img>(result);
-
-                // If no image, there was probably an error so abort
-                if (json.images == null || json.images.Length == 0)
-                {
-                    Debug.LogError("No image was return by the server. This should not happen. Verify that the server is correctly setup.");
-
-                    generating = false;
-#if UNITY_EDITOR
-                    EditorUtility.ClearProgressBar();
-#endif
-                    yield break;
-                }
-
-                // Decode the image from Base64 string into an array of bytes
-                byte[] imageData = Convert.FromBase64String(json.images[0]);
-
-                // Write it in the specified project output folder
-                using (FileStream imageFile = new FileStream(filename, FileMode.Create))
-                {
-#if UNITY_EDITOR
-                    AssetDatabase.StartAssetEditing();
-#endif
-                    yield return imageFile.WriteAsync(imageData, 0, imageData.Length);
-#if UNITY_EDITOR
-                    AssetDatabase.StopAssetEditing();
-                    AssetDatabase.SaveAssets();
-#endif
-                }
-
-                try
-                {
-                    // Read back the image into a texture
-                    if (File.Exists(filename))
-                    {
-                        Texture2D texture = new Texture2D(2, 2);
-                        texture.LoadImage(imageData);
-                        texture.Apply();
-
-                        LoadIntoImage(texture);
-                    }
-
-                    // Read the generation info back (only seed should have changed, as the generation picked a particular seed)
-                    if (json.info != "")
-                    {
-                        SDParamsOutTxt2Img info = JsonConvert.DeserializeObject<SDParamsOutTxt2Img>(json.info);
-
-                        // Read the seed that was used by Stable Diffusion to generate this result
-                        generatedSeed = info.seed;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.Message + "\n\n" + e.StackTrace);
-                }
-            }
-        }
+        
 #if UNITY_EDITOR
         EditorUtility.ClearProgressBar();
 #endif
@@ -330,6 +326,34 @@ public class StableDiffusionImage2Image: StableDiffusionGenerator
         yield return null;
     }
 
+    /// <summary>
+    /// Helper method to write image data to file without using yield within a try block
+    /// </summary>
+    /// <param name="imageData">Image data as byte array</param>
+    /// <param name="filepath">Path to write the file</param>
+    private void WriteImageFile(byte[] imageData, string filepath)
+    {
+        try 
+        {
+            using (FileStream imageFile = new FileStream(filepath, FileMode.Create))
+            {
+#if UNITY_EDITOR
+                AssetDatabase.StartAssetEditing();
+#endif
+                imageFile.Write(imageData, 0, imageData.Length);
+                imageFile.Flush();
+#if UNITY_EDITOR
+                AssetDatabase.StopAssetEditing();
+                AssetDatabase.SaveAssets();
+#endif
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error writing image file: " + e.Message);
+        }
+    }
+    
     /// <summary>
     /// Load the texture into an Image or RawImage.
     /// </summary>
