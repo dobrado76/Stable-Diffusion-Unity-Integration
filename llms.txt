@@ -1,0 +1,9 @@
+# Stable Diffusion Unity Integration
+
+> Unity Editor components that call an AUTOMATIC1111 WebUI HTTP API and apply the returned image to a UI graphic or a mesh material. The tool does not include a diffusion runtime or checkpoints.
+
+This file only points at the support manual. It is not a second copy of that manual, and assistants are not guaranteed to load it.
+
+- [AI support knowledge base](https://github.com/dobrado76/Stable-Diffusion-Unity-Integration/blob/main/AI-SUPPORT.md)
+- [Repository](https://github.com/dobrado76/Stable-Diffusion-Unity-Integration)
+- [Issues](https://github.com/dobrado76/Stable-Diffusion-Unity-Integration/issues)

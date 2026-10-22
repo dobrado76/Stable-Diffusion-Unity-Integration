@@ -2,6 +2,17 @@
 A basic but functional Unity Editor Component for image generation using Stable Diffusion Automatic 1111 [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) from within the Unity Editor.
 [![Watch the video](screenshot.png)](https://youtu.be/8gf5GPzhgk8)
 
+# Need help? Ask an AI assistant
+
+The full guide, FAQ, and troubleshooting notes are in [`AI-SUPPORT.md`](AI-SUPPORT.md). That file is meant to be handed to an AI assistant so answers stay on what this project actually does.
+
+1. Download [`AI-SUPPORT.md`](AI-SUPPORT.md). Open the link and save the file (on GitHub, use Raw, then save the page).
+2. Upload or attach that file in the AI assistant you already use.
+3. Ask the question, or describe what went wrong. Include your Unity version and the Console text when the problem depends on them.
+
+Tell the assistant to follow that file and not to invent buttons, settings, or WebUI features the file does not describe. If you would rather read a shorter page yourself, start with [Getting started](docs/getting-started.md), the [user guide](docs/user-guide.md), [troubleshooting](docs/troubleshooting.md), or the [FAQ](docs/FAQ.md).
+
+Unresolved bugs can be reported at https://github.com/dobrado76/Stable-Diffusion-Unity-Integration/issues . Include the Unity version, whether you cloned the repo or imported the unitypackage, the component name, and the Console error. Remove passwords, private prompts, and personal paths first. This project does not run a support desk and does not promise a reply.
 
 # Token of Appreciation
 If you like it, feel free to Buy me a Coffee (https://www.buymeacoffee.com/dobrado76)
@@ -26,6 +37,7 @@ Straightforward Text-to-Image generation for UI elements:
   b) UI component having a Image or RawImage component (Canvas, Panel, Image, Button, etc.)
 - Image-to-Image generation with Prompt and Negative prompt for:
   a) UI component having a Image or RawImage component (Canvas, Panel, Image, Button, etc.)
+  b) a MeshRenderer via StableDiffusionImage2Material (no Generate button in the Inspector; see the user guide)
 - Editor only components for scene/level design (no runtime dependencies to Stable Diffusion)
 - Image generation using any Stable Diffusion models available in the server model folder
 - Standard parameters control over image generation (Prompt and Negative Prompt, Sampler, Nb. of Steps, CFG Scale, Image dimension and Seed)
@@ -46,16 +58,16 @@ set COMMANDLINE_ARGS= --api
 	; Or with Authentication:	
 set COMMANDLINE_ARGS=--listen --api --api-auth YOUR_USERNAME:YOUR_PASSWORD --cors-allow-origins=*
 
-3. Either, Download the stable-diffusion-unity-integration repository, for example by running `git clone https://github.com/dobrado76/Stable-Diffusion-Unity-Integration.git`. Then, Open the stable-diffusion-unity-integration project in Unity.then open the Demo Scene provided in the package found in `StableDiffusionIntegration/Scenes/DemoScene.unity`.
+3. Either, Download the stable-diffusion-unity-integration repository, for example by running `git clone https://github.com/dobrado76/Stable-Diffusion-Unity-Integration.git`. Then, Open the stable-diffusion-unity-integration project in Unity. The demo scene is `Assets/Stable-Diffusion-Unity-Integration/Scenes/DemoScene.unity`.
 
 Or;
 
 3. Create and open a new Unity project for Built-in Pipeline, download and import the stable-diffusion-unity-integration.unitypackage file into the project (https://github.com/dobrado76/Stable-Diffusion-Unity-Integration/blob/main/Stable-Diffusion-Unity-Integration.unitypackage). By starting from a new project and importing the package, none of the demo pre-generated images will be available in the Asset folder but the project should work as-is, since the textures and images are embedded in the Unity project.
 
-4. Open the Demo Scene provided in the package found in `StableDiffusionIntegration/Scenes/DemoScene.unity`. There is a version with Post-Processing (you need to install the Post-Processing package, you will need to re-open the scene after installing the package) and a version without Post-Processing.
+4. Open the demo scene `Assets/Stable-Diffusion-Unity-Integration/Scenes/DemoScene.unity`. There is a version with Post-Processing (`DemoScene.unity`; install the Post-Processing package, then re-open the scene) and a version without it (`DemoScene-NoPostProcessing.unity`).
 
 5. Select the StableDiffusionConfiguration component and make sure the selected setting point to the correct URL and Port (default: http://127.0.0.1:7860/).
-6. Click on the `List Model` button to get the list of all available models from your local Stable Diffusion server.
+6. Click on the `List Models` button to get the list of all available models from your local Stable Diffusion server.
 
 ![](SDListModels.png)
 
@@ -65,13 +77,13 @@ Or;
 
 8. If any error occured, it should be catched by a try/catch and the exception displayed in the Unity Console.
 
-- The StableDiffusionMaterial component requires to be added to a GameObject that has a MeshRenderer (if apply recursively is not used) or have at least one children GameObject (if apply recursively is used). 
-- The StableDiffusionImage component requires to be added to a UI GameObject (in a Canvas hierachy) that has an Image or RawImage component.
+- The StableDiffusionText2Material component requires to be added to a GameObject that has a MeshRenderer (if apply recursively is not used) or have at least one children GameObject (if apply recursively is used). 
+- The StableDiffusionText2Image component requires to be added to a UI GameObject (in a Canvas hierachy) that has an Image or RawImage component. The older names StableDiffusionMaterial and StableDiffusionImage were renamed in v1.2.4.
 
 
 # Limitations
 Be aware of a few limitations:
-- This repo has been testing only in some versions of Unity (2019, 2020, 2021 and Unity 6). It is believed that it has only basic low level Unity dependencies and should work in any versions. 
+- This repo has been testing only in some versions of Unity (2019, 2020, 2021 and Unity 6). It is believed that it has only basic low level Unity dependencies and should work in any versions. The current scripts do not compile on Unity 2019. `FindAnyObjectByType` is present in 2021.3.18f1 and later, and this project's `ProjectVersion.txt` is 2021.3.33f1. See `docs/getting-started.md`. 
 - The components for generating materials are designed for the Built-in render pipeline and Universal Render Pipeline (URP) only. It may be easy to get it to work for HDRP but no effort has been done in that regard. Feel free to contribute your changes if you make it work.
 
 
@@ -93,6 +105,8 @@ Also, thanks to [ALBRRT](https://github.com/albrrt), [FOXYTOCIN](https://github.
 Additional thank you to [TeoVibe](https://github.com/TeoVibe) for adding suport to online cloud Runpod server, as well as a more solid error catching/handling in various situations. 
 
 # Licence
+The `LICENSE` file at the repository root is the MIT License (copyright 2025 Dominic Branchaud). The paragraphs below are the older README description and still say LGPL; they do not match the current `LICENSE` file. This note is not legal advice.
+
 This repository is under Lesser General Public License (LGPL) v2.1, that you can find in the `LICENSE` file (https://github.com/dobrado76/Stable-Diffusion-Unity-Integration/blob/72560920786b909e829b567567699f332256ea19/LICENSE).
 
 Mainly, it allows you to:

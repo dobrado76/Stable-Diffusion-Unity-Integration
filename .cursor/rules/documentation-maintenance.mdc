@@ -1,0 +1,22 @@
+---
+description: Keep the support docs and AI-SUPPORT.md in step with behaviour changes
+alwaysApply: true
+---
+
+# Support documentation
+
+When a change affects user-visible behaviour, update the matching chapter under `docs/` in the same change, then rebuild the bundle.
+
+- New or renamed Inspector control, button, or component → `docs/user-guide.md` and `docs/FAQ.md`
+- New or changed setting, default, or saved path → `docs/configuration.md`
+- New Console string, HTTP handling, or limit → `docs/reference.md` and `docs/troubleshooting.md`
+- Request JSON, model list, or auth behaviour → `docs/reference.md` and `docs/architecture.md`
+- Install, Unity version, or package requirement → `docs/getting-started.md` and `docs/development.md`
+- Removed behaviour → delete the instructions and FAQ entries that describe it
+- Persistence, overwrite, or undo behaviour → `docs/user-guide.md` and `docs/troubleshooting.md`
+
+Then run `python tools/build_ai_support.py` and commit `AI-SUPPORT.md` with the chapter edits. Do not edit `AI-SUPPORT.md` by hand. `python tools/build_ai_support.py --check` must pass; it compares output and does not write the file.
+
+Do not document AUTOMATIC1111 WebUI, RunPod, or URP features that this project does not send or show. The `LICENSE` file is MIT; do not revive the README's LGPL description as if it were the current grant.
+
+`docs/support-evaluation.md` and `docs/evidence-map.md` stay out of the bundle. There is no CI workflow; the check command is the local gate.
